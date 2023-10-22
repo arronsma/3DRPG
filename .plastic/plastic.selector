@@ -1,0 +1,4 @@
+repository "3DRPG@mashm3@cloud.cn"
+  path "/"
+    br "/main"
+    co "/main"
