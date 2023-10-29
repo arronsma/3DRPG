@@ -57,6 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Script\Controllor\PlayerController.cs" />
+    <Compile Include="Assets\Script\Controllor\EnemyController.cs" />
     <Compile Include="Assets\Script\Manager\MouseManager.cs" />
   </ItemGroup>
   <ItemGroup>
