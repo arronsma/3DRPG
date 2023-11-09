@@ -12,7 +12,7 @@ public class PlayerController : MonoBehaviour
     private GameObject attackTarget;
 
     // cd is defined other way 
-    private float lastAttackTime;
+    private float lastAttackTime = 0.5f;
     // Start is called before the first frame update
     void Awake()
     {
@@ -42,6 +42,8 @@ public class PlayerController : MonoBehaviour
     // move to destinatiion
     public void OnMouseClickGround(Vector3 target)
     {
+        StopAllCoroutines();
+        agent.isStopped = false;
         agent.destination = target;
     }
 
@@ -51,13 +53,14 @@ public class PlayerController : MonoBehaviour
         if (obj != null)
         {
             attackTarget = obj;
+            StartCoroutine(MoveToAttackTarget());
         }
     }
 
     IEnumerator MoveToAttackTarget()
     {
         agent.isStopped = false;
-        transform.LookAt(attackTarget.transform);
+        
 
         // move until close enough, attack distance hard coded to 1, and will get from weapon later.
         while (Vector3.Distance(transform.position, attackTarget.transform.position) > 1)
@@ -65,12 +68,16 @@ public class PlayerController : MonoBehaviour
             agent.destination = attackTarget.transform.position;
             yield return null;
         }
+        transform.LookAt(attackTarget.transform);
         // move 
         agent.isStopped = true;
         //CD is over
         if (lastAttackTime < 0)
         {
+            animator.SetTrigger("attack");
 
+            // reset cd ,here cd will from weapon later
+            lastAttackTime = 0.5f;
         }
     }
 }
