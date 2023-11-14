@@ -2,7 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-public enum EnemyStatus 
+
+
+enum EnemyStatus 
 {   
     GURAD, // Õ¾×®¹Ö
     PATROL, // Ñ²Âß¹Ö
@@ -13,8 +15,12 @@ public enum EnemyStatus
 [RequireComponent(typeof(BoxCollider))]
 public class EnemyController : MonoBehaviour
 {
-    public EnemyStatus enemyStates;
+    private EnemyStatus enemyStates;
     private NavMeshAgent agent;
+
+    [Header("Basic Settings")]
+    public float sightRadius;
+    private GameObject attackTarget;
 
     private void Awake()
     {
@@ -28,6 +34,10 @@ public class EnemyController : MonoBehaviour
 
     private void SwitchStates()
     {
+        if (FoundPlayer())
+        {
+            enemyStates = EnemyStatus.CHASE;
+        }
         switch(enemyStates)
         {
             case EnemyStatus.GURAD:
@@ -35,9 +45,29 @@ public class EnemyController : MonoBehaviour
             case EnemyStatus.PATROL:
                 break;
             case EnemyStatus.CHASE:
+                //TODO: chase player
+                agent.destination = attackTarget.transform.position;
+                //TODO: back to gurad or patrol if player far away
+                //TODO: attack player
+                //TODO: attack animator
                 break;
             case EnemyStatus.DEAD:
                 break;
         }
+    }
+
+    bool FoundPlayer()
+    {
+        var colliders = Physics.OverlapSphere(transform.position, sightRadius);
+        foreach (var target in colliders)
+        {
+            if (target.CompareTag("Player"))
+            {
+                attackTarget = target.gameObject;
+                return true;
+            }
+        }
+        attackTarget = null;
+        return false;
     }
 }

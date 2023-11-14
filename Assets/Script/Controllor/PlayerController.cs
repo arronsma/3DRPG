@@ -11,7 +11,7 @@ public class PlayerController : MonoBehaviour
 
     private GameObject attackTarget;
 
-    // cd is defined other way 
+    //TODO: cd is defined other way 
     private float lastAttackTime = 0.5f;
     // Start is called before the first frame update
     void Awake()
@@ -62,7 +62,7 @@ public class PlayerController : MonoBehaviour
         agent.isStopped = false;
         
 
-        // move until close enough, attack distance hard coded to 1, and will get from weapon later.
+        // TODO: move until close enough, attack distance hard coded to 1, and will get from weapon later.
         while (Vector3.Distance(transform.position, attackTarget.transform.position) > 1)
         {
             agent.destination = attackTarget.transform.position;
@@ -76,7 +76,7 @@ public class PlayerController : MonoBehaviour
         {
             animator.SetTrigger("attack");
 
-            // reset cd ,here cd will from weapon later
+            //TODO: reset cd ,here cd will from weapon later
             lastAttackTime = 0.5f;
         }
     }
