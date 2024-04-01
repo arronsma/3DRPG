@@ -9,6 +9,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Boxophobic.Utils.Editor", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Boxophobic.SkyboxCubemapExtended.Editor", "Boxophobic.SkyboxCubemapExtended.Editor.csproj", "{FDD2F2A7-8AE9-BEE3-9649-E7CE0238DF94}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Boxophobic.Utils.Scripts", "Boxophobic.Utils.Scripts.Player.csproj", "{0EE285A9-6679-0E1E-1E8B-5CFB6A23FBAE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp", "Assembly-CSharp.Player.csproj", "{34377166-FA6E-81A1-7934-3F1FFE1E8B60}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,6 +35,14 @@ Global
 		{FDD2F2A7-8AE9-BEE3-9649-E7CE0238DF94}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FDD2F2A7-8AE9-BEE3-9649-E7CE0238DF94}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FDD2F2A7-8AE9-BEE3-9649-E7CE0238DF94}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0EE285A9-6679-0E1E-1E8B-5CFB6A23FBAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0EE285A9-6679-0E1E-1E8B-5CFB6A23FBAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0EE285A9-6679-0E1E-1E8B-5CFB6A23FBAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0EE285A9-6679-0E1E-1E8B-5CFB6A23FBAE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{34377166-FA6E-81A1-7934-3F1FFE1E8B60}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{34377166-FA6E-81A1-7934-3F1FFE1E8B60}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{34377166-FA6E-81A1-7934-3F1FFE1E8B60}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{34377166-FA6E-81A1-7934-3F1FFE1E8B60}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

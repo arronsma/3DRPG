@@ -4,8 +4,8 @@ using UnityEngine.AI;
 
 enum EnemyStatus 
 {   
-    GURAD, // վ׮��
-    PATROL, // Ѳ�߹�
+    GURAD, // վ׮��
+    PATROL, // Ѳ�߹�
     CHASE, DEAD 
 }
 
@@ -20,10 +20,15 @@ public class EnemyController : MonoBehaviour
     [Header("Basic Settings")]
     public float sightRadius;
     private GameObject attackTarget;
+
     // speed set in agent.speed, but patrol, chase and return from chase have different speed
     private float speed;
     // is GUARD or PATROL when no enemy
     public bool isGuard;
+    // When the PATROL enemy reach its detination, it will stop for a while and walk to another point.
+    public float lookAtTime;
+    private float remainLookTime;
+
 
     [Header("Patrol State")]
     public float patrolRange;
@@ -44,6 +49,7 @@ public class EnemyController : MonoBehaviour
         animator =  GetComponent<Animator>();
         speed = agent.speed;
         wayPoint = centerPosition = transform.position;
+        remainLookTime = lookAtTime;
     }
 
     private void Start()
@@ -79,6 +85,7 @@ public class EnemyController : MonoBehaviour
         switch(enemyStates)
         {
             case EnemyStatus.GURAD:
+                isWalk = false;
                 break;
             case EnemyStatus.PATROL:
                 // this is error, when enemy reach wayPoint, it will stop walking
@@ -88,7 +95,15 @@ public class EnemyController : MonoBehaviour
 
                 if (Vector3.Distance(transform.position, wayPoint) <= agent.stoppingDistance )
                 {
-                    wayPoint = GetNewWayPoint();
+                    if (remainLookTime > 0)
+                    {
+                        remainLookTime -= Time.deltaTime;
+                    } 
+                    else
+                    {
+                        wayPoint = GetNewWayPoint();
+                    }
+                    
                     agent.destination = wayPoint;
                     agent.speed = speed * 0.5f;
                     isWalk = false;
@@ -127,8 +142,10 @@ public class EnemyController : MonoBehaviour
     bool FoundPlayer()
     {
         var colliders = Physics.OverlapSphere(transform.position, sightRadius);
-        foreach (var target in colliders)
+        Debug.Log(colliders.Length);
+        for (int i = 0; i < colliders.Length; i++)
         {
+            var target = colliders[i];
             if (target.CompareTag("Player"))
             {
                 attackTarget = target.gameObject;
@@ -141,6 +158,8 @@ public class EnemyController : MonoBehaviour
 
     Vector3 GetNewWayPoint ()
     {
+        remainLookTime = lookAtTime;
+
         Vector3 wayPoint = new Vector3(centerPosition.x + Random.Range(-patrolRange, patrolRange), centerPosition.y, centerPosition.z + Random.Range(-patrolRange, patrolRange));
         NavMeshHit hit;
         // sample the nearnet reachable point for enemy to go.
