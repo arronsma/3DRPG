@@ -8,7 +8,7 @@ public class PlayerController : MonoBehaviour
     private NavMeshAgent agent;
     private Animator animator;
 
-
+    public CharacterStats characterStats;
     private GameObject attackTarget;
 
     //TODO: cd is defined other way 
@@ -18,6 +18,7 @@ public class PlayerController : MonoBehaviour
     {
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>(); 
+        characterStats = GetComponent<CharacterStats>();
         // you can't put it here
         // MouseManager.Instance.MouseEventClickGround += OnMouseClick;
     }
@@ -60,10 +61,10 @@ public class PlayerController : MonoBehaviour
     IEnumerator MoveToAttackTarget()
     {
         agent.isStopped = false;
-        
 
-        // TODO: move until close enough, attack distance hard coded to 1, and will get from weapon later.
-        while (Vector3.Distance(transform.position, attackTarget.transform.position) > 1)
+
+        Debug.Log("test attack range: " + characterStats.attackData.attackRange.ToString());
+        while (Vector3.Distance(transform.position, attackTarget.transform.position) > characterStats.attackData.attackRange)
         {
             agent.destination = attackTarget.transform.position;
             yield return null;

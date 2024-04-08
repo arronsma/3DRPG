@@ -23,8 +23,13 @@ public class MouseManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        SetCursorTexture();
         MouseControl();
+        
+    }
+
+    private void FixedUpdate()
+    {
+        SetCursorTexture();
     }
 
     void SetCursorTexture()
@@ -44,12 +49,22 @@ public class MouseManager : MonoBehaviour
                     break;
             }
         }
+        if (hitinfo.collider == null)
+        {
+            // Debug.Log("hisNothing");
+        }
     }
 
     void MouseControl()
     {
-        if (Input.GetMouseButtonDown(0) && hitinfo.collider != null)
+        var isMouseClick = Input.GetMouseButtonDown(0);
+        if (isMouseClick)
         {
+            Debug.Log("Hit mouse");
+        }
+        if (isMouseClick && hitinfo.collider != null)
+        {
+            Debug.Log("Valid Click");
             if (hitinfo.collider.gameObject.CompareTag("Ground"))
             {
                 MouseEventClickGround?.Invoke(hitinfo.point);

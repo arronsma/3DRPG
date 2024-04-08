@@ -37,16 +37,20 @@ public class EnemyController : MonoBehaviour
 
     // animator
     bool isWalk;
-
-    // entry of Chase Layer
+    // entry of Chase Layer,meaning enemy in Chase State
     bool isChase;
-    // 
+    // In Chase State, isFollow = true means the enemy is truly chase player.
+    // isFollow = false means the enemy lost player but still in Chase State
+    // and it is going to enter other state. Maybe it is unwilling to return, and stand there for a moment
     bool isFollow;
+
+    private CharacterStats characterStats;
 
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
         animator =  GetComponent<Animator>();
+        characterStats = GetComponent<CharacterStats>();
         speed = agent.speed;
         wayPoint = centerPosition = transform.position;
         remainLookTime = lookAtTime;
@@ -103,13 +107,16 @@ public class EnemyController : MonoBehaviour
                     {
                         wayPoint = GetNewWayPoint();
                     }
-                    
-                    agent.destination = wayPoint;
-                    agent.speed = speed * 0.5f;
                     isWalk = false;
                 }
                 else
                 {
+                    // move the last to line from if block to else block
+                    // since PATROL can return from CHASE, if enemy lost player in CHASE state, 
+                    // agent.destinaion is the position of the enemy at the moment
+                    // when it loses the player's vision.
+                    agent.destination = wayPoint;
+                    agent.speed = speed * 0.5f;
                     isWalk = true;
                 }
                 break;
@@ -130,19 +137,54 @@ public class EnemyController : MonoBehaviour
                 else
                 {
                     isFollow = false;
+                    // when lost target, the enemy will stand at the current point for lookAtTime
+                    // Then return to patrol or guard status.
+                    if (remainLookTime > 0)
+                    {
+                        remainLookTime -= Time.deltaTime;
+                    }
+                    else if (isGuard)
+                    {
+                        enemyStates = EnemyStatus.GURAD;
+                    } 
+                    else
+                    {
+                        enemyStates = EnemyStatus.PATROL;
+                    } 
                     // stop at the current when lost target
                     agent.destination = transform.position;
+                }
+
+                if (TargetInAttachRange() || TargetInSkillRange() )
+                {
+                    // If the character is within the enemy's attack range, the enemy should stop moving and attack.
+                    // isFollow controls the movement animation,
+                    // agent.isStopped controls the movement of game objects.
+                    isFollow = false;
+                    agent.isStopped = true;
                 }
                 break;
             case EnemyStatus.DEAD:
                 break;
         }
     }
+    bool TargetInAttachRange()
+    {
+        if (attackTarget != null)
+            return Vector3.Distance(attackTarget.transform.position, transform.position) <= characterStats.attackData.attackRange;
+        return false;
+    }
+
+    bool TargetInSkillRange()
+    {
+        if (attackTarget != null)
+            return Vector3.Distance(attackTarget.transform.position, transform.position) <= characterStats.attackData.skillRange;
+        return false;
+    }
 
     bool FoundPlayer()
     {
         var colliders = Physics.OverlapSphere(transform.position, sightRadius);
-        Debug.Log(colliders.Length);
         for (int i = 0; i < colliders.Length; i++)
         {
             var target = colliders[i];

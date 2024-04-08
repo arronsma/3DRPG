@@ -56,6 +56,9 @@
     <Analyzer Include="D:\VisualStudio\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Script\Character Status\ScriptableObject\CharacterData_SO.cs" />
+    <Compile Include="Assets\Script\Combat\AttackData_SO.cs" />
+    <Compile Include="Assets\Script\Character Status\MonoBehavior\CharacterStats.cs" />
     <Compile Include="Assets\Script\Controllor\PlayerController.cs" />
     <Compile Include="Assets\Script\Controllor\EnemyController.cs" />
     <Compile Include="Assets\Script\Manager\MouseManager.cs" />
