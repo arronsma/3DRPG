@@ -46,6 +46,8 @@ public class EnemyController : MonoBehaviour
 
     private CharacterStats characterStats;
 
+    float lastAttackTime = 0;
+
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -71,6 +73,8 @@ public class EnemyController : MonoBehaviour
     {
         SwitchStates();
         SwitchAnimation();
+        // lastAttackTime should be update here, since every behavior will reduce CD
+        lastAttackTime -= Time.deltaTime;
     }
 
     void SwitchAnimation()
@@ -162,6 +166,13 @@ public class EnemyController : MonoBehaviour
                     // agent.isStopped controls the movement of game objects.
                     isFollow = false;
                     agent.isStopped = true;
+                    if (lastAttackTime <= 0)
+                    {
+                        lastAttackTime = characterStats.attackData.coolDown;
+
+                        // judge if critical
+                        characterStats.isCritical = Random.value < characterStats.attackData.criticalChance;
+                    }
                 }
                 break;
             case EnemyStatus.DEAD:
