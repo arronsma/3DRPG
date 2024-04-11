@@ -1140,6 +1140,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterData: {fileID: 11400000, guid: fec5689a800baaa489909ec70a2440c7, type: 2}
   attackData: {fileID: 11400000, guid: 49c5464e0e58d34499f4c9e3653dc63d, type: 2}
+  isCritical: 0
 --- !u!4 &150677999 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4661435515762813124, guid: e289bf5debb17f6459818c207d781953, type: 3}
@@ -94049,7 +94050,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterData: {fileID: 11400000, guid: 9489d30b93825a14894a39312d0bf28e, type: 2}
-  attackData: {fileID: 0}
+  attackData: {fileID: 11400000, guid: fbc5029764ca15f45b33167ed8346d13, type: 2}
+  isCritical: 0
 --- !u!1001 &1847056567
 PrefabInstance:
   m_ObjectHideFlags: 0
