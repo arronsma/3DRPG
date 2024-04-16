@@ -82,6 +82,7 @@ public class EnemyController : MonoBehaviour
         animator.SetBool("Walk", isWalk);
         animator.SetBool("ChaseState", isChase);
         animator.SetBool("Follow", isFollow);
+        animator.SetBool("Critical", characterStats.isCritical);
     }
 
     private void SwitchStates()
@@ -131,12 +132,14 @@ public class EnemyController : MonoBehaviour
                 //TODO: attack animator
                 isWalk = false;
                 isChase = true;
+                agent.isStopped = false;
                 if (FoundPlayer())
                 {
                     //TODO: chase player
                     agent.destination = attackTarget.transform.position;
                     agent.speed = speed;
                     isFollow = true;
+                    
                 } 
                 else
                 {
@@ -170,13 +173,31 @@ public class EnemyController : MonoBehaviour
                     {
                         lastAttackTime = characterStats.attackData.coolDown;
 
-                        // judge if critical
+                        // judge if critical hit
                         characterStats.isCritical = Random.value < characterStats.attackData.criticalChance;
+                        // perform Attack
+                        Attack();
+
                     }
                 }
                 break;
             case EnemyStatus.DEAD:
                 break;
+        }
+    }
+
+    void Attack()
+    {
+        transform.LookAt(attackTarget.transform.position);
+        if (TargetInAttachRange())
+        {
+            // attack animator
+            animator.SetTrigger("Attack");
+        } 
+
+        if (TargetInSkillRange())
+        {
+            // skill animator
         }
     }
     bool TargetInAttachRange()
