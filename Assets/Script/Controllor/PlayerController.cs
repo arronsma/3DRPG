@@ -8,17 +8,19 @@ public class PlayerController : MonoBehaviour
     private NavMeshAgent agent;
     private Animator animator;
 
-    public CharacterStats characterStats;
+    private CharacterStats characterStats;
     private GameObject attackTarget;
 
-    //TODO: cd is defined other way 
-    private float lastAttackTime = 0.5f;
+    //cd is defined other way 
+    private float lastAttackTime = 0;
     // Start is called before the first frame update
     void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>(); 
         characterStats = GetComponent<CharacterStats>();
+
+        lastAttackTime = characterStats.attackData.coolDown;
         // you can't put it here
         // MouseManager.Instance.MouseEventClickGround += OnMouseClick;
     }
@@ -61,9 +63,6 @@ public class PlayerController : MonoBehaviour
     IEnumerator MoveToAttackTarget()
     {
         agent.isStopped = false;
-
-
-        Debug.Log("test attack range: " + characterStats.attackData.attackRange.ToString());
         while (Vector3.Distance(transform.position, attackTarget.transform.position) > characterStats.attackData.attackRange)
         {
             agent.destination = attackTarget.transform.position;
@@ -75,10 +74,18 @@ public class PlayerController : MonoBehaviour
         //CD is over
         if (lastAttackTime < 0)
         {
-            animator.SetTrigger("attack");
-
-            //TODO: reset cd ,here cd will from weapon later
-            lastAttackTime = 0.5f;
+            characterStats.isCritical = UnityEngine.Random.value < characterStats.attackData.criticalChance;
+            animator.SetTrigger("Attack");
+            animator.SetBool("Critical", characterStats.isCritical);
+            //reset cd ,here cd will from weapon later
+            lastAttackTime = characterStats.attackData.coolDown;
         }
+    }
+
+    // animator event
+    void Hit()
+    {
+        var targetStats = attackTarget.GetComponent<CharacterStats>();
+        targetStats.TakeDagame(this.characterStats);
     }
 }

@@ -34,6 +34,7 @@ public class EnemyController : MonoBehaviour
     public float patrolRange;
     private Vector3 wayPoint;
     private Vector3 centerPosition;
+    private Quaternion initialOrientation;
 
     // animator
     bool isWalk;
@@ -56,6 +57,7 @@ public class EnemyController : MonoBehaviour
         speed = agent.speed;
         wayPoint = centerPosition = transform.position;
         remainLookTime = lookAtTime;
+        initialOrientation = transform.rotation;
     }
 
     private void Start()
@@ -91,10 +93,21 @@ public class EnemyController : MonoBehaviour
         {
             enemyStates = EnemyStatus.CHASE;
         }
-        switch(enemyStates)
+        
+        switch (enemyStates)
         {
             case EnemyStatus.GURAD:
-                isWalk = false;
+                isChase = false;
+                if (Vector3.SqrMagnitude(transform.position - centerPosition) > agent.stoppingDistance)
+                {
+                    agent.isStopped = false;
+                    isWalk = true;
+                    agent.destination = centerPosition;
+                } else
+                {
+                    isWalk = false;
+                    transform.rotation = Quaternion.Lerp(transform.rotation, initialOrientation, 0.01f);
+                }
                 break;
             case EnemyStatus.PATROL:
                 // this is error, when enemy reach wayPoint, it will stop walking
@@ -135,7 +148,7 @@ public class EnemyController : MonoBehaviour
                 agent.isStopped = false;
                 if (FoundPlayer())
                 {
-                    //TODO: chase player
+                    //chase player
                     agent.destination = attackTarget.transform.position;
                     agent.speed = speed;
                     isFollow = true;
@@ -247,5 +260,14 @@ public class EnemyController : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position, sightRadius);
         Vector3 size = new Vector3(patrolRange, patrolRange, patrolRange);
         Gizmos.DrawWireCube(centerPosition, size);
+    }
+
+    public void Hit()
+    {
+        if (attackTarget != null)
+        {
+            var targetStats = attackTarget.GetComponent<CharacterStats>();
+            targetStats.TakeDagame(this.characterStats);
+        }
     }
 }

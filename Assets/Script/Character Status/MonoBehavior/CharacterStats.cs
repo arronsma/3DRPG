@@ -34,4 +34,34 @@ public class CharacterStats : MonoBehaviour
         set { if (characterData != null) characterData.currentDefense = value; }
     }
     #endregion
+
+    #region Character Combat
+
+    // defender is 'this'
+    public void TakeDagame(CharacterStats attacker)
+    {
+        // defense is a number, but damage is calculated using: minDamage,
+        // maxDamage, criticalMultiplier,  criticalChance (isCritical);
+        int damage = attacker.CurrentDamage() - CurrentDefense;
+        // damage could not be negative. 
+        damage = Mathf.Max(damage, 0);
+        // health could not be negative.
+        CurrentHealth = Mathf.Max(CurrentHealth - damage, 0);
+
+        // TODO:Update UI
+        // TODO:exp update if enemy died
+
+    }
+
+    int CurrentDamage()
+    {
+        float coreDamage = Random.Range(attackData.minDamage, attackData.maxDamage);
+        if (isCritical)
+        {
+            coreDamage *= attackData.criticalMultiplier;
+        }
+        Debug.Log(isCritical + " " + coreDamage);
+        return (int)coreDamage;
+    }
+    #endregion
 }

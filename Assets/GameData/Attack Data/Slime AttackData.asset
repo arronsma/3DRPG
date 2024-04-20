@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6548525a91e46874082d4e4eac8eb43c, type: 3}
-  m_Name: Slime Data
+  m_Name: Slime AttackData
   m_EditorClassIdentifier: 
   attackRange: 1
   skillRange: 0

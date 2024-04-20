@@ -58,13 +58,8 @@ public class MouseManager : MonoBehaviour
     void MouseControl()
     {
         var isMouseClick = Input.GetMouseButtonDown(0);
-        if (isMouseClick)
-        {
-            Debug.Log("Hit mouse");
-        }
         if (isMouseClick && hitinfo.collider != null)
         {
-            Debug.Log("Valid Click");
             if (hitinfo.collider.gameObject.CompareTag("Ground"))
             {
                 MouseEventClickGround?.Invoke(hitinfo.point);
