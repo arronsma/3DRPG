@@ -48,6 +48,10 @@ public class CharacterStats : MonoBehaviour
         // health could not be negative.
         CurrentHealth = Mathf.Max(CurrentHealth - damage, 0);
 
+        if (attacker.isCritical)
+        {
+            GetComponent<Animator>().SetTrigger("Hit");
+        }
         // TODO:Update UI
         // TODO:exp update if enemy died
 

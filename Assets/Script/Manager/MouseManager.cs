@@ -3,22 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public class MouseManager : MonoBehaviour
+public class MouseManager : Singleton<MouseManager>
 {
     RaycastHit hitinfo;
     public event Action<Vector3> MouseEventClickGround;
     public event Action<GameObject> MouseEventClickEnemy;
-    public static MouseManager Instance = null;
 
     public Texture2D point, doorway, attack, target, arrow;
-    private void Awake()
-    {
-        if (Instance != null)
-        {
-            Destroy(Instance);
-        }
-        Instance = this;
-    }
 
     // Update is called once per frame
     void Update()

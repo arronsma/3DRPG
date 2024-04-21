@@ -11,7 +11,7 @@ enum EnemyStatus
 
 [RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(BoxCollider))]
-public class EnemyController : MonoBehaviour
+public class EnemyController : MonoBehaviour, IEndGameObserver
 {
     private EnemyStatus enemyStates;
     private NavMeshAgent agent;
@@ -44,6 +44,8 @@ public class EnemyController : MonoBehaviour
     // isFollow = false means the enemy lost player but still in Chase State
     // and it is going to enter other state. Maybe it is unwilling to return, and stand there for a moment
     bool isFollow;
+    bool isDead;
+    bool isWin;
 
     private CharacterStats characterStats;
 
@@ -58,6 +60,8 @@ public class EnemyController : MonoBehaviour
         wayPoint = centerPosition = transform.position;
         remainLookTime = lookAtTime;
         initialOrientation = transform.rotation;
+        isDead = false;
+        isWin = false;
     }
 
     private void Start()
@@ -70,9 +74,23 @@ public class EnemyController : MonoBehaviour
         {
             enemyStates = EnemyStatus.PATROL;
         }
+        GameManager.Instance.AddObserver(this);
+
+    }
+
+    public void OnEnable()
+    {
+    }
+
+    public void OnDisable()
+    {
+        GameManager.Instance.RemoveObserver(this);
+
     }
     private void Update()
     {
+        if (isWin)
+            return;
         SwitchStates();
         SwitchAnimation();
         // lastAttackTime should be update here, since every behavior will reduce CD
@@ -85,11 +103,17 @@ public class EnemyController : MonoBehaviour
         animator.SetBool("ChaseState", isChase);
         animator.SetBool("Follow", isFollow);
         animator.SetBool("Critical", characterStats.isCritical);
+        animator.SetBool("Die", isDead);
+        animator.SetBool("Win", isWin);
     }
 
     private void SwitchStates()
     {
-        if (FoundPlayer())
+        if (characterStats.CurrentHealth <= 0)
+        {
+            enemyStates = EnemyStatus.DEAD;
+        }
+        else if (FoundPlayer())
         {
             enemyStates = EnemyStatus.CHASE;
         }
@@ -195,6 +219,11 @@ public class EnemyController : MonoBehaviour
                 }
                 break;
             case EnemyStatus.DEAD:
+                isDead = true;
+                // prevent enemy to chase or attack Player
+                agent.enabled = false;
+                GetComponent<Collider>().enabled = false;
+                Destroy(gameObject, 5.0f);
                 break;
         }
     }
@@ -269,5 +298,18 @@ public class EnemyController : MonoBehaviour
             var targetStats = attackTarget.GetComponent<CharacterStats>();
             targetStats.TakeDagame(this.characterStats);
         }
+    }
+
+    public void EndNotify()
+    {
+        // stop agent
+        // win animation
+        Debug.Log("enemy win");
+        isChase = false;
+        isWalk = false;
+        attackTarget = null;
+        isWin = true;
+        SwitchAnimation();
+
     }
 }

@@ -11,6 +11,8 @@ public class PlayerController : MonoBehaviour
     private CharacterStats characterStats;
     private GameObject attackTarget;
 
+    bool isDead;
+
     //cd is defined other way 
     private float lastAttackTime = 0;
     // Start is called before the first frame update
@@ -29,17 +31,27 @@ public class PlayerController : MonoBehaviour
     {
         MouseManager.Instance.MouseEventClickGround += OnMouseClickGround;
         MouseManager.Instance.MouseEventClickEnemy += OnMouseClickEnemy;
+
+        GameManager.Instance.RegisterPlayer(this.characterStats);
     }
 
     // Update is called once per frame
     void Update()
     {
-        animator.SetFloat("Speed", agent.velocity.sqrMagnitude);
+        isDead = characterStats.CurrentHealth <= 0;
+        // Notify when Player is dead, Enemy win
+        if (isDead)
+        {
+            GameManager.Instance.Notify();
+        }
+        SwitchAnimation();
+        lastAttackTime -= Time.fixedDeltaTime;
     }
 
-    private void FixedUpdate()
+    void SwitchAnimation()
     {
-        lastAttackTime -= Time.fixedDeltaTime;
+        animator.SetFloat("Speed", agent.velocity.sqrMagnitude);
+        animator.SetBool("Die", isDead);
     }
 
     // move to destinatiion
