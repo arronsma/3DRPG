@@ -11,6 +11,7 @@ enum EnemyStatus
 
 [RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(BoxCollider))]
+[RequireComponent(typeof(CharacterStats))]
 public class EnemyController : MonoBehaviour, IEndGameObserver
 {
     private EnemyStatus enemyStates;
@@ -80,6 +81,7 @@ public class EnemyController : MonoBehaviour, IEndGameObserver
 
     public void OnEnable()
     {
+        // GameManager.Instance.AddObserver(this);
     }
 
     public void OnDisable()
@@ -138,7 +140,7 @@ public class EnemyController : MonoBehaviour, IEndGameObserver
                 // isWalk = true;
                 isChase = false;
                 isFollow = false;
-
+                agent.isStopped = false;
                 if (Vector3.Distance(transform.position, wayPoint) <= agent.stoppingDistance )
                 {
                     if (remainLookTime > 0)
@@ -307,7 +309,9 @@ public class EnemyController : MonoBehaviour, IEndGameObserver
         Debug.Log("enemy win");
         isChase = false;
         isWalk = false;
+        isFollow = false;
         attackTarget = null;
+        agent.enabled = false;
         isWin = true;
         SwitchAnimation();
 

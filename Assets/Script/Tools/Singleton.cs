@@ -19,4 +19,9 @@ public class Singleton<T> : MonoBehaviour where T :Singleton<T>, new()
             return _instance;
         }
     }
+
+    public static bool IsInitialized()
+    {
+        return _instance != null;
+    }
 }

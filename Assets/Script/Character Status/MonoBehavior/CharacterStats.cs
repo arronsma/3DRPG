@@ -4,8 +4,15 @@ using UnityEngine;
 
 public class CharacterStats : MonoBehaviour
 {
-    public CharacterData_SO characterData;
+    public CharacterData_SO templateCharacterData;
+    private CharacterData_SO characterData;
     public AttackData_SO attackData;
+
+
+    private void Awake()
+    {
+        characterData = Instantiate(templateCharacterData);
+    }
 
     [HideInInspector]
     public bool isCritical;

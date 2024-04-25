@@ -43,6 +43,7 @@ public class PlayerController : MonoBehaviour
         if (isDead)
         {
             GameManager.Instance.Notify();
+            DeadClean();
         }
         SwitchAnimation();
         lastAttackTime -= Time.fixedDeltaTime;
@@ -99,5 +100,12 @@ public class PlayerController : MonoBehaviour
     {
         var targetStats = attackTarget.GetComponent<CharacterStats>();
         targetStats.TakeDagame(this.characterStats);
+    }
+    // clean status when player dead
+    void DeadClean()
+    {
+        agent.enabled = false;
+        MouseManager.Instance.MouseEventClickEnemy -= OnMouseClickEnemy;
+        MouseManager.Instance.MouseEventClickGround -= OnMouseClickGround;
     }
 }
