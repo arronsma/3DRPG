@@ -20,7 +20,7 @@ public class EnemyController : MonoBehaviour, IEndGameObserver
 
     [Header("Basic Settings")]
     public float sightRadius;
-    private GameObject attackTarget;
+    protected GameObject attackTarget;
 
     // speed set in agent.speed, but patrol, chase and return from chase have different speed
     private float speed;
@@ -233,16 +233,18 @@ public class EnemyController : MonoBehaviour, IEndGameObserver
     void Attack()
     {
         transform.LookAt(attackTarget.transform.position);
-        if (TargetInAttachRange())
+        if (TargetInSkillRange())
+        {
+            // skill animator
+            animator.SetTrigger("Skill");
+        }
+        else if (TargetInAttachRange())
         {
             // attack animator
             animator.SetTrigger("Attack");
         } 
 
-        if (TargetInSkillRange())
-        {
-            // skill animator
-        }
+
     }
     bool TargetInAttachRange()
     {
