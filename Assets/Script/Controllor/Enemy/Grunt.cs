@@ -11,7 +11,7 @@ public class Grunt : EnemyController
 
     public void kickOff()
     {
-        if (attackTarget != null)
+        if (attackTarget != null || transform.IsFacingTarget(attackTarget.transform))
         {
             transform.LookAt(attackTarget.transform);
 

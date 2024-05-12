@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 100
   currentHealth: 100
-  baseDefense: 100
-  currentDefense: 100
+  baseDefense: 2
+  currentDefense: 2

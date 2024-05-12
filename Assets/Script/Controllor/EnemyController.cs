@@ -48,7 +48,7 @@ public class EnemyController : MonoBehaviour, IEndGameObserver
     bool isDead;
     bool isWin;
 
-    private CharacterStats characterStats;
+    protected CharacterStats characterStats;
 
     float lastAttackTime = 0;
 
@@ -223,7 +223,8 @@ public class EnemyController : MonoBehaviour, IEndGameObserver
             case EnemyStatus.DEAD:
                 isDead = true;
                 // prevent enemy to chase or attack Player
-                agent.enabled = false;
+                agent.isStopped = true;
+                agent.radius = 0;
                 GetComponent<Collider>().enabled = false;
                 Destroy(gameObject, 5.0f);
                 break;
@@ -297,7 +298,7 @@ public class EnemyController : MonoBehaviour, IEndGameObserver
 
     public void Hit()
     {
-        if (attackTarget != null)
+        if (attackTarget != null && transform.IsFacingTarget(attackTarget.transform))
         {
             var targetStats = attackTarget.GetComponent<CharacterStats>();
             targetStats.TakeDagame(this.characterStats);
@@ -313,9 +314,10 @@ public class EnemyController : MonoBehaviour, IEndGameObserver
         isWalk = false;
         isFollow = false;
         attackTarget = null;
-        agent.enabled = false;
         isWin = true;
         SwitchAnimation();
+        agent.isStopped = true;
+        agent.radius = 0;
 
     }
 }
